@@ -2,6 +2,7 @@ const express = require("express");
 const path = require("path");
 const bodyParser = require("body-parser");
 const db = require("./models");
+const ApiRoutes = require("./routes/apiRoutes");
 
 
 const app = express();
@@ -15,14 +16,14 @@ if (process.env.NODE_ENV === "production") {
 }
 
 // Define API routes here
-
+app.use("/api", ApiRoutes);
 // Send every other request to the React app
 // Define any API routes before this runs
 app.get("*", (req, res) => {
   res.sendFile(path.join(__dirname, "./client/build/index.html"));
 });
 
-db.sequelize.sync({force: false})
+db.sequelize.sync({force: true})
 
 const PORT = process.env.PORT || 3001;
 app.listen(PORT, () => {

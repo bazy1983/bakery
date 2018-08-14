@@ -2,7 +2,7 @@
   "development": {
     "username": "root",
     "password": "07702535961Mm",
-    "database": "database_development",
+    "database": "invoices",
     "host": "127.0.0.1",
     "dialect": "mysql"
   },
