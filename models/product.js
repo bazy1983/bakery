@@ -6,8 +6,15 @@ module.exports = (sequelize, DataTypes) => {
       primaryKey: true,
       autoIncrement: true,
     },
-    name: DataTypes.STRING,
-    price: DataTypes.FLOAT
+    name: {
+      type: DataTypes.STRING,
+      allowNull : false,
+      unique: true
+    },
+    price: {
+      type: DataTypes.FLOAT,
+    allowNull: false
+    }
   }, {});
   Product.associate = function(models) {
     // associations can be defined here

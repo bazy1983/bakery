@@ -6,6 +6,9 @@ const API = {
             name : product,
             price : price
         })
+    },
+    allProducts : ()=>{
+        return axios.get("/api/all-products")
     }
 }
 

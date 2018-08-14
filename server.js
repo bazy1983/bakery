@@ -23,7 +23,7 @@ app.get("*", (req, res) => {
   res.sendFile(path.join(__dirname, "./client/build/index.html"));
 });
 
-db.sequelize.sync({force: true})
+db.sequelize.sync({force: false})
 
 const PORT = process.env.PORT || 3001;
 app.listen(PORT, () => {

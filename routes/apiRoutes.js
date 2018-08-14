@@ -1,9 +1,25 @@
 const express = require("express");
 const router = express.Router();
+const db = require("../models");
 
 router.post("/new-product", (req, res)=>{
-    console.log(req.body)
-    res.send("okay");
+    db.Product.create(req.body)  
+        .then(()=>{
+            res.status(200).end();
+        })
+        .catch((err)=>{
+            console.log(err)
+        })
+})
+
+router.get("/all-products", (req, res)=>{
+    db.Product.findAll({})
+        .then((products)=>{
+            res.json(products)
+        })
+        .catch((err)=>{
+            console.log(err)
+        })
 })
 
 module.exports = router;

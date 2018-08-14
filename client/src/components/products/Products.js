@@ -1,13 +1,44 @@
 import React, { Component } from "react";
 import API from "../../API/api";
+import "./products.css"
 
 class Products extends Component {
+    state = {
+        products: "",
+    }
+
+    componentDidMount() {
+        this.getProducts();
+    }
+
+    getProducts = () => {
+        API.allProducts()
+            .then((products) => {
+                console.log(products.data)
+                this.setState({ products: products.data })
+            })
+    }
     createProduct = () => {
-        let product = document.querySelector("#product").value;
-        let price = document.querySelector("#price").value;
-        if (product && price){
-            API.addProduct(product, price)
+        let product = document.querySelector("#product");
+        let price = document.querySelector("#price");
+        if (product && price) {
+            API.addProduct(product.value.trim(), price.value.trim())
+                .then(() => {
+                    this.getProducts();
+                    product.value = "";
+                    price.value = "";
+                })
+        } else {
+            console.log("fill in the blanks")
         }
+    }
+    editHandler = (recordId) => {
+        let inputEl = document.querySelectorAll(`#record${recordId} input`);
+        inputEl.forEach((el)=>{
+            el.classList.remove("hidden")
+        })
+        document.querySelector(`#name${recordId}`).classList.add("hidden");
+        document.querySelector(`#price${recordId}`).classList.add("hidden");
     }
 
     render() {
@@ -23,28 +54,24 @@ class Products extends Component {
                 </thead>
 
                 <tbody>
-                    <tr>
-                        <td>1</td>
-                        <td>Eclair</td>
-                        <td>$0.87</td>
-                        <td><button className="btn waves-effect waves-light">Add</button></td>
-                    </tr>
-                    <tr>
-                        <td>2</td>
-                        <td>Jellybean</td>
-                        <td>$3.76</td>
-                        <td><button className="btn waves-effect waves-light">Add</button></td>
-                    </tr>
-                    <tr>
-                        <td>3</td>
-                        <td>Lollipop</td>
-                        <td>$7.00</td>
-                        <td><button className="btn waves-effect waves-light">Add</button></td>
-                    </tr>
+                    {this.state.products ?
+                        this.state.products.map((product) => {
+                            return (
+                                <tr key={product.id} id={"record"+product.id}>
+                                    <td>{product.id}</td>
+                                    <td><span id={"name"+product.id}>{product.name}</span> <input type="text" className="hidden" defaultValue={product.name}/></td>
+                                    <td><span id={"price"+product.id}>{product.price}</span> <input type="text" className="hidden" defaultValue={product.price}/></td>
+                                    <td><button onClick={this.editHandler.bind(this, product.id)} className="btn waves-effect waves-light">Edit</button></td>
+                                </tr>
+                            )
+                        })
+                        : null
+                    }
+
                     <tr>
                         <td><button onClick={this.createProduct} className="btn waves-effect waves-light">Add</button></td>
-                        <td><input id="product" type="text" placeholder="add new procdut" required/></td>
-                        <td><input id="price" type="number" required/></td>
+                        <td><input id="product" type="text" placeholder="add new product" required /></td>
+                        <td><input id="price" type="number" placeholder="add price" required /></td>
                     </tr>
                 </tbody>
             </table>
