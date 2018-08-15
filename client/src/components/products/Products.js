@@ -57,8 +57,16 @@ class Products extends Component {
         }
     }
 
-    EditHandler = () => {
-
+    editHandler = (recordId) => {
+        let name = document.querySelector("#nameEdit"+recordId);
+        let price = document.querySelector("#priceEdit"+recordId);
+        if (name.value && price.value){
+            API.editProduct(recordId, name.value, price.value)
+                .then(()=>{
+                    this.getProducts()
+                    document.querySelector("#edit"+recordId).click();
+                })
+        }
     }
 
     SearchHandler= (e) => {
@@ -82,13 +90,13 @@ class Products extends Component {
                         <label htmlFor="search">Search</label>
                     </div>
                 </div>
-                <table className="striped">
+                <table className="striped z-depth-2">
                     <thead className="blue-grey darken-3 white-text">
                         <tr>
                             <th style={{ width: "10%", textAlign: "center" }}>#</th>
                             <th style={{ width: "35%" }}>Product name</th>
-                            <th style={{ width: "35%" }}>Product Price</th>
-                            <th style={{ width: "20%", textAlign: "center" }}>Edit</th>
+                            <th style={{ width: "30%" }}>Product Price</th>
+                            <th style={{ width: "25%", textAlign: "center" }}>Edit</th>
                         </tr>
                     </thead>
 
@@ -102,7 +110,7 @@ class Products extends Component {
                                         <td><span id={"price" + product.id}>{product.price}</span> <input id={"priceEdit" + product.id} type="text" className="hidden" defaultValue={product.price} /></td>
                                         <td className="center-align">
                                             <button id={"edit" + product.id} onClick={this.editToggler.bind(this, product.id)} className="btn waves-effect waves-light">Edit</button>
-                                            <button id={"accept" + product.id} className="btn waves-effect waves-light hidden">Accept</button>
+                                            <button id={"accept" + product.id} onClick={this.editHandler.bind(this, product.id)} className="btn waves-effect waves-light hidden">Accept</button>
                                         </td>
                                     </tr>
                                 )

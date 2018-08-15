@@ -38,4 +38,16 @@ router.get("/product/:name", (req, res) => {
             console.log(err);
         })
 })
+
+router.put("/edit-product", (req, res)=> {
+    db.Product.update({
+        name : req.body.name,
+        price : req.body.price
+    },
+    {
+        where : {id : req.body.id}
+    })
+    console.log(req.body)
+    res.send("ok")
+})
 module.exports = router;

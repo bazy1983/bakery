@@ -12,6 +12,14 @@ const API = {
     },
     searchProduct: (product)=>{
         return axios.get("/api/product/" + product)
+    },
+    editProduct : (id, product, price)=>{
+        console.log(id, product, price)
+        return axios.put("/api/edit-product", {
+            id : id,
+            name : product,
+            price : price
+        })
     }
 }
 
