@@ -9,6 +9,9 @@ const API = {
     },
     allProducts : ()=>{
         return axios.get("/api/all-products")
+    },
+    searchProduct: (product)=>{
+        return axios.get("/api/product/" + product)
     }
 }
 

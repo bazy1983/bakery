@@ -22,4 +22,20 @@ router.get("/all-products", (req, res)=>{
         })
 })
 
+router.get("/product/:name", (req, res) => {
+    db.Product.findAll({
+        where : {
+            name : {
+                [db.Sequelize.Op.regexp] : req.params.name
+            }
+        }
+    })
+        .then((products)=>{
+            // console.log(products)
+            res.json(products)
+        })
+        .catch((err)=> {
+            console.log(err);
+        })
+})
 module.exports = router;
