@@ -5,7 +5,7 @@ import "./products.css"
 class Products extends Component {
     state = {
         products: "",
-        editMode: false
+        editMode: 0 //replaced by recordId
     }
 
     componentDidMount() {
@@ -34,7 +34,11 @@ class Products extends Component {
         }
     }
     editToggler = (recordId) => {
-        this.setState({editMode : !this.state.editMode})
+        if (this.state.editMode === recordId){
+            this.setState({editMode : 0})
+        } else {
+            this.setState({editMode : recordId})
+        }
     }
 
     editHandler = (recordId) => {
@@ -44,7 +48,7 @@ class Products extends Component {
             API.editProduct(recordId, name.value, price.value)
                 .then(() => {
                     this.getProducts()
-                    document.querySelector("#edit" + recordId).click();
+                    this.setState({editMode : 0})
                 })
         }
     }
@@ -88,16 +92,16 @@ class Products extends Component {
                                     <tr key={product.id} id={"record" + product.id}>
                                         <td className="center-align"><span id={"recordID" + product.id}>{product.id}</span></td>
                                         <td>
-                                            <span id={"name" + product.id} className={editing ? "hidden" : null}>{product.name}</span>
-                                            <input id={"nameEdit" + product.id} type="text" className={editing ? null : "hidden"} defaultValue={product.name} />
+                                            <span id={"name" + product.id} className={editing===product.id ? "hidden" : null}>{product.name}</span>
+                                            <input id={"nameEdit" + product.id} type="text" className={editing===product.id ? null : "hidden"} defaultValue={product.name} />
                                         </td>
                                         <td>
-                                            <span id={"price" + product.id} className={editing ? "hidden" : null}>{product.price}</span>
-                                            <input id={"priceEdit" + product.id} type="text" className={editing ? null : "hidden"} defaultValue={product.price} />
+                                            <span id={"price" + product.id} className={editing===product.id ? "hidden" : null}>{product.price}</span>
+                                            <input id={"priceEdit" + product.id} type="text" className={editing===product.id ? null : "hidden"} defaultValue={product.price} />
                                         </td>
                                         <td className="center-align">
-                                            <button id={"edit" + product.id} onClick={this.editToggler.bind(this, product.id)} className="btn waves-effect waves-light">{editing ? "Cancel" : "Edit"}</button>
-                                            <button id={"accept" + product.id} onClick={this.editHandler.bind(this, product.id)} className={editing ? "btn waves-effect waves-light" : "btn waves-effect waves-light hidden"}>Accept</button>
+                                            <button id={"edit" + product.id} onClick={this.editToggler.bind(this, product.id)} className="btn waves-effect waves-light">{editing===product.id ? "Cancel" : "Edit"}</button>
+                                            <button id={"accept" + product.id} onClick={this.editHandler.bind(this, product.id)} className={editing===product.id ? "btn waves-effect waves-light" : "btn waves-effect waves-light hidden"}>Accept</button>
                                         </td>
                                     </tr>
                                 )
