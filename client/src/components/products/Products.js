@@ -2,6 +2,9 @@ import React, { Component } from "react";
 import API from "../../API/api";
 import "./products.css"
 
+//components 
+import { MdSearch } from "react-icons/md";
+
 class Products extends Component {
     state = {
         products: "",
@@ -69,10 +72,10 @@ class Products extends Component {
         return (
             <div>
                 <div className="left">
-                    This is an inline input field:
+                    Search Products:
                     <div className="input-field inline">
                         <input id="search" type="text" onChange={this.SearchHandler} />
-                        <label htmlFor="search">Search</label>
+                        <label htmlFor="search">Search <MdSearch/></label>
                     </div>
                 </div>
                 <table className="striped z-depth-2">
@@ -87,10 +90,10 @@ class Products extends Component {
 
                     <tbody>
                         {this.state.products ?
-                            this.state.products.map((product) => {
+                            this.state.products.map((product, i) => {
                                 return (
                                     <tr key={product.id} id={"record" + product.id}>
-                                        <td className="center-align"><span id={"recordID" + product.id}>{product.id}</span></td>
+                                        <td className="center-align"><span id={"recordID" + product.id}>{i+1}</span></td>
                                         <td>
                                             <span id={"name" + product.id} className={editing===product.id ? "hidden" : null}>{product.name}</span>
                                             <input id={"nameEdit" + product.id} type="text" className={editing===product.id ? null : "hidden"} defaultValue={product.name} />

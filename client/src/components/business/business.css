@@ -1,0 +1,45 @@
+svg {
+    width: 24px;
+    height: 24px;
+}
+
+a svg {
+    transform: translateY(7px);
+}
+
+.add-business{
+    width: 500px;
+    padding : 10px;
+    position: fixed;
+    bottom: 60px;
+    right: 110px;
+    transition: 0.5s
+}
+
+.shrink{
+    width: 0px;
+    height: 0px;
+    overflow: hidden;
+    opacity: 0;
+}
+
+.buttons {
+    position: absolute;
+    bottom: -30px;
+    right: 20px;
+}
+
+.buttons svg{
+    border-radius: 20px;
+    width: 40px;
+    height: 40px;
+    margin: 5px;
+}
+
+#mdDone svg{
+    background: #4db6ac;
+}
+
+#mdClose svg{
+    background: #e57373;
+}
