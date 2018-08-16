@@ -5,6 +5,7 @@ import "./products.css"
 class Products extends Component {
     state = {
         products: "",
+        editMode: false
     }
 
     componentDidMount() {
@@ -33,54 +34,34 @@ class Products extends Component {
         }
     }
     editToggler = (recordId) => {
-        let buttonText = document.querySelector(`#edit${recordId}`)
-        let inputEl = document.querySelectorAll(`#record${recordId} input`);
-
-        if (buttonText.textContent === "Edit") {
-            buttonText.textContent = "Cancel"
-            inputEl.forEach((el) => {
-                el.classList.remove("hidden")
-            });
-            // document.querySelector(`#recordID${recordId}`).classList.add("hidden");
-            document.querySelector(`#name${recordId}`).classList.add("hidden");
-            document.querySelector(`#price${recordId}`).classList.add("hidden");
-            document.querySelector(`#accept${recordId}`).classList.remove("hidden");
-        } else {
-            buttonText.textContent = "Edit"
-            inputEl.forEach((el) => {
-                el.classList.add("hidden")
-            });
-            // document.querySelector(`#recordID${recordId}`).classList.remove("hidden");
-            document.querySelector(`#name${recordId}`).classList.remove("hidden");
-            document.querySelector(`#price${recordId}`).classList.remove("hidden");
-            document.querySelector(`#accept${recordId}`).classList.add("hidden");
-        }
+        this.setState({editMode : !this.state.editMode})
     }
 
     editHandler = (recordId) => {
-        let name = document.querySelector("#nameEdit"+recordId);
-        let price = document.querySelector("#priceEdit"+recordId);
-        if (name.value && price.value){
+        let name = document.querySelector("#nameEdit" + recordId);
+        let price = document.querySelector("#priceEdit" + recordId);
+        if (name.value && price.value) {
             API.editProduct(recordId, name.value, price.value)
-                .then(()=>{
+                .then(() => {
                     this.getProducts()
-                    document.querySelector("#edit"+recordId).click();
+                    document.querySelector("#edit" + recordId).click();
                 })
         }
     }
 
-    SearchHandler= (e) => {
-        if(e.target.value){
+    SearchHandler = (e) => {
+        if (e.target.value) {
             API.searchProduct(e.target.value)
-                .then((products)=> {
-                    this.setState({products : products.data})
+                .then((products) => {
+                    this.setState({ products: products.data })
                 })
-        }else {
+        } else {
             this.getProducts();
         }
     }
 
     render() {
+        let editing = this.state.editMode;
         return (
             <div>
                 <div className="left">
@@ -106,11 +87,17 @@ class Products extends Component {
                                 return (
                                     <tr key={product.id} id={"record" + product.id}>
                                         <td className="center-align"><span id={"recordID" + product.id}>{product.id}</span></td>
-                                        <td><span id={"name" + product.id}>{product.name}</span> <input id={"nameEdit" + product.id} type="text" className="hidden" defaultValue={product.name} /></td>
-                                        <td><span id={"price" + product.id}>{product.price}</span> <input id={"priceEdit" + product.id} type="text" className="hidden" defaultValue={product.price} /></td>
+                                        <td>
+                                            <span id={"name" + product.id} className={editing ? "hidden" : null}>{product.name}</span>
+                                            <input id={"nameEdit" + product.id} type="text" className={editing ? null : "hidden"} defaultValue={product.name} />
+                                        </td>
+                                        <td>
+                                            <span id={"price" + product.id} className={editing ? "hidden" : null}>{product.price}</span>
+                                            <input id={"priceEdit" + product.id} type="text" className={editing ? null : "hidden"} defaultValue={product.price} />
+                                        </td>
                                         <td className="center-align">
-                                            <button id={"edit" + product.id} onClick={this.editToggler.bind(this, product.id)} className="btn waves-effect waves-light">Edit</button>
-                                            <button id={"accept" + product.id} onClick={this.editHandler.bind(this, product.id)} className="btn waves-effect waves-light hidden">Accept</button>
+                                            <button id={"edit" + product.id} onClick={this.editToggler.bind(this, product.id)} className="btn waves-effect waves-light">{editing ? "Cancel" : "Edit"}</button>
+                                            <button id={"accept" + product.id} onClick={this.editHandler.bind(this, product.id)} className={editing ? "btn waves-effect waves-light" : "btn waves-effect waves-light hidden"}>Accept</button>
                                         </td>
                                     </tr>
                                 )
