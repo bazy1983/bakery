@@ -20,6 +20,12 @@ const API = {
             name : product,
             price : price
         })
+    },
+    addBusiness : (businessData)=>{
+        return axios.post("/api/new-business", businessData)
+    },
+    getAllBusinesses : ()=>{
+        return axios.get("/api/all-businesses")
     }
 }
 

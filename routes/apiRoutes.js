@@ -50,4 +50,23 @@ router.put("/edit-product", (req, res)=> {
     console.log(req.body)
     res.send("ok")
 })
+
+router.post("/new-business", (req, res)=> {
+    // console.log(req.body)
+    db.Business.create(req.body)
+        .then((business)=>{
+            console.log(business)
+            res.send("okay")
+        })
+})
+
+router.get("/all-businesses", (req, res)=>{
+    db.Business.findAll({})
+        .then((businesses)=>{
+            res.json(businesses)
+        })
+        .catch((err)=>{
+            console.error(err)
+        })
+})
 module.exports = router;
