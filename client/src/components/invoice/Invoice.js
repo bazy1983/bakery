@@ -4,14 +4,15 @@ import API from "../../API/api";
 
 class Invoice extends Component {
     state = {
-        record: null,
+        records: null,
         businesses: null,
         productsList: null,
         unitPrice: "0.00",
         totalPrice: "0.00",
         productId: null,
         businessId: null,
-        quantity : 0
+        quantity: 0,
+        invoice: null
     }
 
     componentDidMount = () => {
@@ -29,10 +30,15 @@ class Invoice extends Component {
                 })
 
             })
+        this.generateInvoice()
     }
 
     generateInvoice = () => {
-        return moment().format("YYYYMMDD");
+        let invoice = moment().format("YYYYMMDD");
+        this.setState({
+            invoice: invoice
+        })
+        return invoice
     }
 
     onProductSelect = (e) => {
@@ -53,16 +59,36 @@ class Invoice extends Component {
     onQuantityChange = (e) => {
         this.setState({
             totalPrice: this.state.unitPrice * e.target.value,
-            quantity : e.target.value
+            quantity: e.target.value
         })
     }
 
     newRecordSubmit = () => {
-        let {unitPrice, totalPrice, businessId, productId, quantity} = this.state;
-        if (unitPrice && totalPrice && businessId && productId && quantity){
-            console.log("can submit")
+        let { unitPrice, totalPrice, businessId, productId, quantity, invoice } = this.state;
+        if (unitPrice && totalPrice && businessId && productId && quantity) {
+            let record = {
+                invoice: invoice,
+                price: unitPrice,
+                quantity: quantity,
+                total: totalPrice,
+                BusinessId: businessId,
+                ProductId: productId
+            }
+            API.invoiceRecord(record)
+                .then(() => {
+                    this.getInvoiceRecords()
+                })
         } else {
             console.log("can not submit")
+        }
+    }
+
+    getInvoiceRecords = () => {
+        if (this.state.invoice) {
+            API.recordsforInvoice(this.state.invoice)
+                .then((records) => {
+                    this.setState({ records: records.data })
+                })
         }
     }
 
@@ -72,7 +98,7 @@ class Invoice extends Component {
         return (
             <div>
                 <h4>Generate New Invoice</h4>
-                <p>Invoice Number: {this.generateInvoice()}</p>
+                <p>Invoice Number: {this.state.invoice}</p>
                 <div>
                     Customer :
                         <div className="input-field inline" style={{ width: "70%" }}>
@@ -101,13 +127,22 @@ class Invoice extends Component {
                     </thead>
 
                     <tbody>
-                        <tr>
-                            <td>{counter++}</td>
-                            <td>buns</td>
-                            <td>$0.87</td>
-                            <td><input type="number" name="" id="" /></td>
-                            <td>$1.55</td>
-                        </tr>
+                        {
+                            this.state.records ?
+                                this.state.records.map((record) => {
+                                    return (
+                                        <tr key={record.id}>
+                                            <td>{counter++}</td>
+                                            <td>{record.Product.name}</td>
+                                            <td>{record.price}</td>
+                                            <td>{record.quantity}</td>
+                                            <td>{record.total}</td>
+                                        </tr>
+                                    )
+                                })
+                                :
+                                null
+                        }
                         <tr>
                             <td>{counter++}</td>
                             <td>

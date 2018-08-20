@@ -1,34 +1,37 @@
 import axios from "axios";
 
 const API = {
-    addProduct : (product, price)=>{
+    addProduct: (product, price) => {
         return axios.post("/api/new-product", {
-            name : product,
-            price : price
+            name: product,
+            price: price
         })
     },
-    allProducts : ()=>{
+    allProducts: () => {
         return axios.get("/api/all-products")
     },
-    searchProduct: (product)=>{
+    searchProduct: (product) => {
         return axios.get("/api/product/" + product)
     },
-    editProduct : (id, product, price)=>{
+    editProduct: (id, product, price) => {
         // console.log(id, product, price)
         return axios.put("/api/edit-product", {
-            id : id,
-            name : product,
-            price : price
+            id: id,
+            name: product,
+            price: price
         })
     },
-    addBusiness : (businessData)=>{
+    addBusiness: (businessData) => {
         return axios.post("/api/new-business", businessData)
     },
-    getAllBusinesses : ()=>{
+    getAllBusinesses: () => {
         return axios.get("/api/all-businesses")
     },
-    invoiceRecord : (record)=> {
+    invoiceRecord: (record) => {
         return axios.post("/api/invoice-record", record)
+    },
+    recordsforInvoice: (invoice) => {
+        return axios.get("/api/records/" + invoice)
     }
 }
 
