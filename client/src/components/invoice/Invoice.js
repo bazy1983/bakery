@@ -4,10 +4,14 @@ import API from "../../API/api";
 
 class Invoice extends Component {
     state = {
+        record: null,
         businesses: null,
         productsList: null,
         unitPrice: "0.00",
-        totalPrice: "0.00"
+        totalPrice: "0.00",
+        productId: null,
+        businessId: null,
+        quantity : 0
     }
 
     componentDidMount = () => {
@@ -25,24 +29,41 @@ class Invoice extends Component {
                 })
 
             })
-
     }
 
-    countInvoicesAndGenerate = () => {
+    generateInvoice = () => {
         return moment().format("YYYYMMDD");
     }
 
     onProductSelect = (e) => {
+        let selectedProduct = JSON.parse(e.target.value);
+
         this.setState({
-            unitPrice: e.target.value
+            unitPrice: selectedProduct.price,
+            productId: selectedProduct.id
         })
-        console.log(e.target)
+    }
+
+    onBusinessSelect = (e) => {
+        this.setState({
+            businessId: e.target.value
+        })
     }
 
     onQuantityChange = (e) => {
         this.setState({
-            totalPrice: this.state.unitPrice * e.target.value
+            totalPrice: this.state.unitPrice * e.target.value,
+            quantity : e.target.value
         })
+    }
+
+    newRecordSubmit = () => {
+        let {unitPrice, totalPrice, businessId, productId, quantity} = this.state;
+        if (unitPrice && totalPrice && businessId && productId && quantity){
+            console.log("can submit")
+        } else {
+            console.log("can not submit")
+        }
     }
 
 
@@ -51,16 +72,16 @@ class Invoice extends Component {
         return (
             <div>
                 <h4>Generate New Invoice</h4>
-                <p>Invoice Number: {this.countInvoicesAndGenerate()}</p>
+                <p>Invoice Number: {this.generateInvoice()}</p>
                 <div>
                     Customer :
                         <div className="input-field inline" style={{ width: "70%" }}>
-                        <select className="browser-default" defaultValue="">
+                        <select className="browser-default" defaultValue="" onChange={this.onBusinessSelect}>
                             <option value="" disabled>Choose your option</option>
                             {this.state.businesses ?
                                 this.state.businesses
                                     .map((business) => {
-                                        return <option key={business.id} value={business.id}>{business.name}</option>
+                                        return <option key={business.id} value={business.id} >{business.name}</option>
                                     })
                                 : <option>Loading</option>}
                         </select>
@@ -95,7 +116,10 @@ class Invoice extends Component {
                                     {
                                         this.state.productsList ?
                                             this.state.productsList.map((item) => {
-                                                return <option key={item.id} productid={item.id} value={item.price}>{item.name}</option>
+                                                return <option key={item.id} value={JSON.stringify({
+                                                    id: item.id,
+                                                    price: item.price
+                                                })}>{item.name}</option>
                                             })
                                             :
                                             <option>Loading</option>
@@ -106,7 +130,7 @@ class Invoice extends Component {
                             <td><input type="number" onChange={this.onQuantityChange} /></td>
                             <td>{this.state.totalPrice}</td>
                             <td>
-                                <button>Add</button>
+                                <button onClick={this.newRecordSubmit}>Add</button>
                                 <button>Clear</button>
                             </td>
                         </tr>

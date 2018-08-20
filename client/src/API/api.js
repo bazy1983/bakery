@@ -26,6 +26,9 @@ const API = {
     },
     getAllBusinesses : ()=>{
         return axios.get("/api/all-businesses")
+    },
+    invoiceRecord : (record)=> {
+        return axios.post("/api/invoice-record", record)
     }
 }
 
