@@ -69,4 +69,12 @@ router.get("/all-businesses", (req, res)=>{
             console.error(err)
         })
 })
+
+router.get("/invoices-of-day", (req, res)=>{
+    db.Order.findAll({
+        where: {
+            
+        }
+    })
+})
 module.exports = router;

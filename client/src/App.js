@@ -2,14 +2,16 @@ import React, { Component } from 'react';
 import './App.css';
 
 //components
-import Navbar from "./components/navbar/Navbar"
-import Products from "./components/products/Products"
-import Business from "./components/business/Business"
+import Navbar from "./components/navbar/Navbar";
+import Products from "./components/products/Products";
+import Business from "./components/business/Business";
+import Invoice from "./components/invoice/Invoice";
 
 class App extends Component {
   state = {
     showProducts : false,
-    showBusiness : true
+    showBusiness : false,
+    showInvoice : true
   }
 
   showComponentToggler = (compName)=>{
@@ -23,6 +25,7 @@ class App extends Component {
         <div className="container">
           {this.state.showProducts?<Products />:null}
           {this.state.showBusiness?<Business />:null}
+          {this.state.showInvoice?<Invoice />:null}
         </div>
       </div>
     );
