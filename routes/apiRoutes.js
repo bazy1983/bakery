@@ -86,7 +86,7 @@ router.post("/invoice-record", (req, res) => {
 })
 
 router.get("/records/:invoice", (req, res) => {
-    console.log(req.params)
+    // console.log(req.params)
     db.Order.findAll({
         where: {
             invoice: req.params.invoice
@@ -96,6 +96,26 @@ router.get("/records/:invoice", (req, res) => {
             {model : db.Product}
         ]
     })
+        .then((records)=>{
+            res.json(records)
+        })
+})
+
+router.get("/test", (req, res)=>{
+    db.Order.findAll({
+        attributes : {include : [[db.sequelize.fn("COUNT", db.sequelize.col("invoice")), "num"]]},
+        group : "invoice",
+        include : [{model : db.Business}]
+    })
+        .then((invoices)=>{
+            res.json(invoices)
+        })
+})
+
+router.get("/test1", (req, res)=>{
+    db.Order.sum(
+        "total"
+    )
         .then((records)=>{
             res.json(records)
         })

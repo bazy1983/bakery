@@ -27,12 +27,13 @@ const API = {
     getAllBusinesses: () => {
         return axios.get("/api/all-businesses")
     },
-    invoiceRecord: (record) => {
+    invoiceRecord: (record) => {//creates records
         return axios.post("/api/invoice-record", record)
     },
-    recordsforInvoice: (invoice) => {
+    recordsforInvoice: (invoice) => {//get all records for invoice
         return axios.get("/api/records/" + invoice)
     }
+
 }
 
 export default API;

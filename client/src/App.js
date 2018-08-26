@@ -1,4 +1,5 @@
 import React, { Component } from 'react';
+import { BrowserRouter, Switch, Route } from "react-router-dom"
 import './App.css';
 
 //components
@@ -9,25 +10,29 @@ import Invoice from "./components/invoice/Invoice";
 
 class App extends Component {
   state = {
-    showProducts : false,
-    showBusiness : false,
-    showInvoice : true
+    showProducts: false,
+    showBusiness: false,
+    showInvoice: true
   }
 
-  showComponentToggler = (compName)=>{
-    this.setState({[compName] : !this.state[compName]});
+  showComponentToggler = (compName) => {
+    this.setState({ [compName]: !this.state[compName] });
   }
 
   render() {
     return (
-      <div className="App">
-        <Navbar showComponent = {this.showComponentToggler}/>
-        <div className="container">
-          {this.state.showProducts?<Products />:null}
-          {this.state.showBusiness?<Business />:null}
-          {this.state.showInvoice?<Invoice />:null}
+      <BrowserRouter>
+        <div className="App">
+          <Navbar />
+          <div className="container">
+            <Switch>
+              <Route exact path="/" component={Invoice} />
+              <Route exact path="/products" component={Products} />
+              <Route exact path="/business" component={Business} />
+            </Switch>
+          </div>
         </div>
-      </div>
+      </BrowserRouter>
     );
   }
 }
