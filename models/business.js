@@ -18,7 +18,7 @@ module.exports = (sequelize, DataTypes) => {
   }, {});
   Business.associate = function(models) {
     // associations can be defined here
-    Business.hasMany(models.Order, {
+    Business.hasMany(models.Invoice, {
       onDelete : "cascade"
     })
   };

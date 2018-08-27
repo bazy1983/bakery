@@ -32,6 +32,9 @@ const API = {
     },
     recordsforInvoice: (invoice) => {//get all records for invoice
         return axios.get("/api/records/" + invoice)
+    },
+    recordsCountSum : ()=>{
+        return axios.get("/api/count-and-sum-orders")
     }
 
 }

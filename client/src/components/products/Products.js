@@ -75,7 +75,7 @@ class Products extends Component {
                     Search Products:
                     <div className="input-field inline">
                         <input id="search" type="text" onChange={this.SearchHandler} />
-                        <label htmlFor="search">Search <MdSearch/></label>
+                        <label htmlFor="search"><MdSearch/> Search </label>
                     </div>
                 </div>
                 <table className="striped z-depth-2">

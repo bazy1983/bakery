@@ -7,6 +7,7 @@ import Navbar from "./components/navbar/Navbar";
 import Products from "./components/products/Products";
 import Business from "./components/business/Business";
 import Invoice from "./components/invoice/Invoice";
+import AllInvoices from "./components/all-invoices/AllInvoices"
 
 class App extends Component {
   state = {
@@ -29,6 +30,7 @@ class App extends Component {
               <Route exact path="/" component={Invoice} />
               <Route exact path="/products" component={Products} />
               <Route exact path="/business" component={Business} />
+              <Route exact path="/all-invoices" component={AllInvoices}/>
             </Switch>
           </div>
         </div>

@@ -2,6 +2,10 @@ const express = require("express");
 const router = express.Router();
 const db = require("../models");
 
+function firstOfCurrentMonth() {
+    return new Date(new Date().getFullYear(),new Date().getMonth() , 1)
+}
+
 router.post("/new-product", (req, res) => {
     db.Product.create(req.body)
         .then(() => {
@@ -101,23 +105,18 @@ router.get("/records/:invoice", (req, res) => {
         })
 })
 
-router.get("/test", (req, res)=>{
+router.get("/count-and-sum-orders", (req, res)=>{
     db.Order.findAll({
-        attributes : {include : [[db.sequelize.fn("COUNT", db.sequelize.col("invoice")), "num"]]},
+        attributes : {include : [
+            [db.sequelize.fn("COUNT", db.sequelize.col("invoice")), "num"],
+            [db.sequelize.fn("SUM", db.sequelize.col("total")), "final"]
+        ]},
         group : "invoice",
         include : [{model : db.Business}]
     })
         .then((invoices)=>{
             res.json(invoices)
-        })
+        });
 })
 
-router.get("/test1", (req, res)=>{
-    db.Order.sum(
-        "total"
-    )
-        .then((records)=>{
-            res.json(records)
-        })
-})
 module.exports = router;

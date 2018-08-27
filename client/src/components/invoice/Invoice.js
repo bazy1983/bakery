@@ -2,9 +2,12 @@ import React, { Component } from "react";
 import moment from "moment";
 import API from "../../API/api";
 
+//component
+import { MdLibraryAdd, MdLayersClear } from "react-icons/md";
+
 class Invoice extends Component {
     state = {
-        records: null,
+        records: [],
         businesses: null,
         productsList: null,
         unitPrice: "0.00",
@@ -12,7 +15,7 @@ class Invoice extends Component {
         productId: null,
         businessId: null,
         quantity: 0,
-        invoice: null
+        invoice: "Loading..."
     }
 
     componentDidMount = () => {
@@ -28,17 +31,20 @@ class Invoice extends Component {
                 this.setState({
                     productsList: products.data
                 })
-
             })
         this.generateInvoice()
     }
 
     generateInvoice = () => {
-        let invoice = moment().format("YYYYMMDD");
-        this.setState({
-            invoice: invoice
-        })
-        return invoice
+        API.recordsCountSum()
+            .then((count) => {
+                let invoiceNumber = count.data.length + 1;
+                let invoice = moment().format("YYYYMMDD") + "-" + invoiceNumber;
+                this.setState({
+                    invoice: invoice
+                })
+            })
+
     }
 
     onProductSelect = (e) => {
@@ -78,6 +84,12 @@ class Invoice extends Component {
                 .then(() => {
                     this.getInvoiceRecords()
                 })
+            this.setState({
+                unitPrice: "0.00",
+                totalPrice: "0.00",
+                productId: null,
+                quantity: 0
+            })
         } else {
             console.log("can not submit")
         }
@@ -92,6 +104,13 @@ class Invoice extends Component {
         }
     }
 
+    onNewInvoice = () =>{
+        this.generateInvoice();
+        this.setState({
+            records : []
+        })
+    }
+
 
     render() {
         let counter = 1;
@@ -101,7 +120,7 @@ class Invoice extends Component {
                 <p>Invoice Number: {this.state.invoice}</p>
                 <div>
                     Customer :
-                        <div className="input-field inline" style={{ width: "70%" }}>
+                        <div className="input-field inline" style={{ width: "65%" }}>
                         <select className="browser-default" defaultValue="" onChange={this.onBusinessSelect}>
                             <option value="" disabled>Choose your option</option>
                             {this.state.businesses ?
@@ -112,6 +131,8 @@ class Invoice extends Component {
                                 : <option>Loading</option>}
                         </select>
                     </div>
+                    <button className="waves-effect waves-light btn inline" style={{ margin: "0px 5px" }}>Print</button>
+                    <button className="waves-effect waves-light btn inline" onClick={this.onNewInvoice}>New</button>
                 </div>
                 <hr />
                 <table className="centered">
@@ -127,8 +148,9 @@ class Invoice extends Component {
                     </thead>
 
                     <tbody>
+                        {/* list all records for particular invoice number */}
                         {
-                            this.state.records ?
+                            this.state.records.length ?
                                 this.state.records.map((record) => {
                                     return (
                                         <tr key={record.id}>
@@ -142,8 +164,8 @@ class Invoice extends Component {
                                 })
                                 :
                                 null
-                        }
-                        <tr>
+                        } 
+                        <tr> {/* start new record fields */}
                             <td>{counter++}</td>
                             <td>
                                 <select className="browser-default" defaultValue="" onChange={this.onProductSelect}>
@@ -162,11 +184,11 @@ class Invoice extends Component {
                                 </select>
                             </td>
                             <td >${this.state.unitPrice}</td>
-                            <td><input type="number" onChange={this.onQuantityChange} /></td>
+                            <td><input type="number" onChange={this.onQuantityChange} value={this.state.quantity}/></td>
                             <td>{this.state.totalPrice}</td>
-                            <td>
-                                <button onClick={this.newRecordSubmit}>Add</button>
-                                <button>Clear</button>
+                            <td className="blue-text">
+                                <MdLibraryAdd onClick={this.newRecordSubmit} style={{ transform: "scale(1.2)", margin: "0px 5px" }} />
+                                <MdLayersClear style={{ transform: "scale(1.2)" }} />
                             </td>
                         </tr>
                     </tbody>
