@@ -30,11 +30,20 @@ const API = {
     invoiceRecord: (record) => {//creates records
         return axios.post("/api/invoice-record", record)
     },
-    recordsforInvoice: (invoice) => {//get all records for invoice
-        return axios.get("/api/records/" + invoice)
+    recordsforInvoice: (invoiceId) => {//get all records for invoiceId
+        return axios.get("/api/records/" + invoiceId)
     },
-    recordsCountSum : ()=>{
-        return axios.get("/api/count-and-sum-orders")
+    invoiceNumber : ()=>{
+        return axios.get("/api/generate-invoice-number")
+    },
+    openInvoice: (businessID, invoiceNumber)=>{
+        return axios.post("/api/open-invoice",{
+            number : invoiceNumber,
+            businessId : businessID
+        })
+    },
+    allInvoices: ()=>{
+        return axios.get("/api/all-invoices")
     }
 
 }

@@ -11,6 +11,14 @@ module.exports = (sequelize, DataTypes) => {
       foreignKey : {
         allowNull : false
       }
+    });
+    Order.belongsTo(models.Invoice, {
+      foreignKey : {
+        allowNull : false
+      }
+    });
+    Order.belongsTo(models.Business, {
+      foreignKey : "BusinessId"
     })
   };
   return Order;

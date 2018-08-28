@@ -8,11 +8,11 @@ class AllInvoices extends Component {
     }
 
     componentDidMount = () => {
-        API.recordsCountSum()
+        API.allInvoices()
             .then((invoices) => {
                 console.log(invoices.data)
                 this.setState({
-                    invoices : invoices.data
+                    invoices: invoices.data
                 })
             })
     }
@@ -21,18 +21,46 @@ class AllInvoices extends Component {
     render() {
         return (
             <ul className="collapsible">
+                {/* get all invoices */}
                 {this.state.invoices.length ?
-                    this.state.invoices.map((invoice) => { 
-                        {/* get all invoices */}
+                    this.state.invoices.map((invoice) => {
+                        let total = 0
+                        invoice.Orders.forEach((el) => {
+                            total += el.total
+                        });
+                        let orderTable = invoice.Orders.map((el) => {
+                            return (
+                                <tr key={el.id}>
+                                    <td>{el.Product.name}</td>
+                                    <td>${el.price}</td>
+                                    <td>{el.quantity}</td>
+                                    <td>${el.total}</td>
+                                </tr>
+                            )
+                        })
                         return (
                             <li key={invoice.id}>
                                 <div className="collapsible-header">
-                                    <span style={{width:"25%"}}>Invoice: {invoice.invoice} </span>
-                                    <span style={{width:"40%"}}>Customer: {invoice.Business.name} </span>
-                                    <span style={{width:"15%"}}>records: {invoice.num} </span>
-                                    <span style={{width:"20%"}}>Amount: {Math.round(invoice.final*100)/100} </span>
+                                    <span style={{ width: "25%" }}>Invoice: {invoice.number} </span>
+                                    <span style={{ width: "40%" }}>Customer: {invoice.Business.name} </span>
+                                    <span style={{ width: "15%" }}>records: {invoice.Orders.length} </span>
+                                    <span style={{ width: "20%" }}>Amount: ${total} </span>
                                 </div>
-                                <div className="collapsible-body"><span>Lorem ipsum dolor sit amet.</span></div>
+                                <div className="collapsible-body">
+                                    <table>
+                                        <thead>
+                                            <tr>
+                                                <th>Product</th>
+                                                <th>Unit Price</th>
+                                                <th>Quantity</th>
+                                                <th>Total Price</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            {orderTable}
+                                        </tbody>
+                                    </table>
+                                </div>
                             </li>
                         )
                     })

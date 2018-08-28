@@ -11,7 +11,7 @@ import API from "../../API/api";
 class Business extends Component {
     state = {
         addBusiness: false,
-        businesses: null,
+        businesses: [],
         name: "",
         address1: "",
         address2: "",
@@ -101,7 +101,7 @@ class Business extends Component {
         return (
             <div>
                 <ul className="collapsible popout">
-                    {this.state.businesses ?
+                    {this.state.businesses.length ?
                         this.state.businesses.map((business) => {
                             return (
                                 <li key={business.id} className="left-align">
@@ -115,7 +115,9 @@ class Business extends Component {
                                 </li>
                             )
                         })
-                        : null}
+                        : 
+                        <li>Add New Businesses</li>
+                        }
 
 
                 </ul>

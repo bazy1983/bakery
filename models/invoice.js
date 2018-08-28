@@ -9,6 +9,9 @@ module.exports = (sequelize, DataTypes) => {
       foreignKey : {
         allowNull : false
       }
+    });
+    Invoice.hasMany(models.Order,{
+      onDelete : "cascade"
     })
   };
   return Invoice;

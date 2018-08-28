@@ -15,7 +15,8 @@ class Invoice extends Component {
         productId: null,
         businessId: null,
         quantity: 0,
-        invoice: "Loading..."
+        invoice: "Loading...",
+        invoiceId : null
     }
 
     componentDidMount = () => {
@@ -35,10 +36,10 @@ class Invoice extends Component {
         this.generateInvoice()
     }
 
-    generateInvoice = () => {
-        API.recordsCountSum()
+    generateInvoice = () => { //get new invoice number
+        API.invoiceNumber()
             .then((count) => {
-                let invoiceNumber = count.data.length + 1;
+                let invoiceNumber = count.data.count + 1;
                 let invoice = moment().format("YYYYMMDD") + "-" + invoiceNumber;
                 this.setState({
                     invoice: invoice
@@ -49,7 +50,6 @@ class Invoice extends Component {
 
     onProductSelect = (e) => {
         let selectedProduct = JSON.parse(e.target.value);
-
         this.setState({
             unitPrice: selectedProduct.price,
             productId: selectedProduct.id
@@ -57,27 +57,36 @@ class Invoice extends Component {
     }
 
     onBusinessSelect = (e) => {
-        this.setState({
-            businessId: e.target.value
-        })
+        let businessID = e.target.value;
+        let invoiceNumber = this.state.invoice;
+        API.openInvoice(businessID, invoiceNumber)
+            .then((invoice)=>{
+                // console.log(invoice.data.id)
+                this.setState({
+                    businessId: businessID,
+                    invoiceId : invoice.data.id
+                })
+                
+            })
     }
 
     onQuantityChange = (e) => {
+        let total = this.state.unitPrice * e.target.value;
+        let correctedTotal = Math.round(total*100)/100;
         this.setState({
-            totalPrice: this.state.unitPrice * e.target.value,
+            totalPrice: correctedTotal,
             quantity: e.target.value
         })
     }
 
     newRecordSubmit = () => {
-        let { unitPrice, totalPrice, businessId, productId, quantity, invoice } = this.state;
-        if (unitPrice && totalPrice && businessId && productId && quantity) {
+        let { unitPrice, totalPrice, businessId, productId, quantity, invoice, invoiceId } = this.state;
+        if (unitPrice && totalPrice && invoiceId && productId && quantity) {
             let record = {
-                invoice: invoice,
                 price: unitPrice,
                 quantity: quantity,
                 total: totalPrice,
-                BusinessId: businessId,
+                InvoiceId: invoiceId,
                 ProductId: productId
             }
             API.invoiceRecord(record)
@@ -97,8 +106,9 @@ class Invoice extends Component {
 
     getInvoiceRecords = () => {
         if (this.state.invoice) {
-            API.recordsforInvoice(this.state.invoice)
+            API.recordsforInvoice(this.state.invoiceId)
                 .then((records) => {
+                    console.log(records.data)
                     this.setState({ records: records.data })
                 })
         }
@@ -121,6 +131,7 @@ class Invoice extends Component {
                 <div>
                     Customer :
                         <div className="input-field inline" style={{ width: "65%" }}>
+                            {/* dropdown of all businesses */}
                         <select className="browser-default" defaultValue="" onChange={this.onBusinessSelect}>
                             <option value="" disabled>Choose your option</option>
                             {this.state.businesses ?
@@ -165,7 +176,7 @@ class Invoice extends Component {
                                 :
                                 null
                         } 
-                        <tr> {/* start new record fields */}
+                        <tr>{/* start new record fields */}
                             <td>{counter++}</td>
                             <td>
                                 <select className="browser-default" defaultValue="" onChange={this.onProductSelect}>

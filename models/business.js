@@ -20,7 +20,10 @@ module.exports = (sequelize, DataTypes) => {
     // associations can be defined here
     Business.hasMany(models.Invoice, {
       onDelete : "cascade"
-    })
+    });
+    Business.hasMany(models.Order, {
+      onDelete : "cascade"
+    });
   };
   return Business;
 };

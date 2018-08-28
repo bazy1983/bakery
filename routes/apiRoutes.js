@@ -83,17 +83,21 @@ router.get("/invoices-of-day", (req, res) => {
 })
 
 router.post("/invoice-record", (req, res) => {
+    console.log(req.body)
     db.Order.create(req.body)
         .then(() => {
             res.status(200).end();
         })
+        .catch((err)=>{
+            console.error(err)
+        })
 })
 
-router.get("/records/:invoice", (req, res) => {
+router.get("/records/:invoiceId", (req, res) => {
     // console.log(req.params)
     db.Order.findAll({
         where: {
-            invoice: req.params.invoice
+            invoiceId: req.params.invoiceId
         },
         include : [
             {model : db.Business},
@@ -102,6 +106,50 @@ router.get("/records/:invoice", (req, res) => {
     })
         .then((records)=>{
             res.json(records)
+        })
+})
+
+// counts all invoices in BD and generate a count as new invoice number
+router.get("/generate-invoice-number",(req, res)=>{
+    db.Invoice.findAndCountAll()
+        .then((data)=>{
+            res.json({count:data.count})
+        })
+})
+
+router.post("/open-invoice", (req, res)=>{
+    console.log(req.body)
+    db.Invoice.findOrCreate({
+        where: {number : req.body.number},
+        defaults: {BusinessId : req.body.businessId}
+    })
+    .spread((invoice, created) => {
+        if(!created){ // if record exists
+            db.Invoice.update(
+                {BusinessId : req.body.businessId},
+                {where : {number : req.body.number}}
+            )
+                .then((invoice)=>{
+                    return
+                })
+        }
+        res.json(invoice);
+    })
+})
+
+router.get("/all-invoices", (req, res)=>{
+    db.Invoice.findAll({
+        include: [
+            db.Business, 
+            {
+                model : db.Order, 
+                include: [{
+                    model : db.Product,
+                }]
+            }]
+    })
+        .then((invoices)=>{
+            res.json(invoices)
         })
 })
 
