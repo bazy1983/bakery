@@ -31,6 +31,7 @@ class App extends Component {
               <Route exact path="/products" component={Products} />
               <Route exact path="/business" component={Business} />
               <Route exact path="/all-invoices" component={AllInvoices}/>
+              <Route path="/report"/>
             </Switch>
           </div>
         </div>

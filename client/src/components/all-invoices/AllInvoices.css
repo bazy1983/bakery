@@ -1,3 +1,7 @@
 .collapsible-header span {
     text-align: left
 }
+
+.print svg {
+    margin-top: -9px;
+}

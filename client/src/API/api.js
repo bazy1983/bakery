@@ -42,8 +42,13 @@ const API = {
             businessId : businessID
         })
     },
-    allInvoices: ()=>{
-        return axios.get("/api/all-invoices")
+    allInvoices: (sort, query)=>{
+        return axios.get("/api/all-invoices",{
+            params : {
+                sort : sort,
+                query : query
+            }
+        })
     }
 
 }

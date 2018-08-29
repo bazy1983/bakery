@@ -139,6 +139,11 @@ router.post("/open-invoice", (req, res)=>{
 
 router.get("/all-invoices", (req, res)=>{
     db.Invoice.findAll({
+        where: {
+            number: {
+                [db.Sequelize.Op.regexp]: req.query.query
+            }
+        },
         include: [
             db.Business, 
             {
@@ -146,25 +151,26 @@ router.get("/all-invoices", (req, res)=>{
                 include: [{
                     model : db.Product,
                 }]
-            }]
+            }],
+        order : [["id", req.query.sort]]
     })
         .then((invoices)=>{
             res.json(invoices)
         })
 })
 
-router.get("/count-and-sum-orders", (req, res)=>{
-    db.Order.findAll({
-        attributes : {include : [
-            [db.sequelize.fn("COUNT", db.sequelize.col("invoice")), "num"],
-            [db.sequelize.fn("SUM", db.sequelize.col("total")), "final"]
-        ]},
-        group : "invoice",
-        include : [{model : db.Business}]
-    })
-        .then((invoices)=>{
-            res.json(invoices)
-        });
-})
+// router.get("/count-and-sum-orders", (req, res)=>{
+//     db.Order.findAll({
+//         attributes : {include : [
+//             [db.sequelize.fn("COUNT", db.sequelize.col("invoice")), "num"],
+//             [db.sequelize.fn("SUM", db.sequelize.col("total")), "final"]
+//         ]},
+//         group : "invoice",
+//         include : [{model : db.Business}]
+//     })
+//         .then((invoices)=>{
+//             res.json(invoices)
+//         });
+// })
 
 module.exports = router;
