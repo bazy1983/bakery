@@ -56,7 +56,7 @@ class Invoice extends Component {
         })
     }
 
-    onBusinessSelect = (e) => {
+    onBusinessSelect = (e) => { //creating new invoice record, and grab record id
         let businessID = e.target.value;
         let invoiceNumber = this.state.invoice;
         API.openInvoice(businessID, invoiceNumber)
@@ -80,7 +80,7 @@ class Invoice extends Component {
     }
 
     newRecordSubmit = () => {
-        let { unitPrice, totalPrice, businessId, productId, quantity, invoice, invoiceId } = this.state;
+        let { unitPrice, totalPrice, productId, quantity,  invoiceId } = this.state;
         if (unitPrice && totalPrice && invoiceId && productId && quantity) {
             let record = {
                 price: unitPrice,
@@ -117,7 +117,9 @@ class Invoice extends Component {
     onNewInvoice = () =>{
         this.generateInvoice();
         this.setState({
-            records : []
+            records : [],
+            invoiceId : null,
+            businessID : null
         })
     }
 
@@ -142,7 +144,11 @@ class Invoice extends Component {
                                 : <option>Loading</option>}
                         </select>
                     </div>
-                    <button className="waves-effect waves-light btn inline" style={{ margin: "0px 5px" }}>Print</button>
+                    {this.state.invoiceId?
+                    <a href={`/report#${this.state.invoiceId}`} target="_blank" rel="noopener noreferrer"><button className="waves-effect waves-light btn inline" style={{ margin: "0px 5px" }}>Print</button></a>
+                    :
+                    <button className="waves-effect waves-light btn inline" style={{ margin: "0px 5px" }} disabled>Print</button>
+                    }
                     <button className="waves-effect waves-light btn inline" onClick={this.onNewInvoice}>New</button>
                 </div>
                 <hr />

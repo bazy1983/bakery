@@ -157,6 +157,20 @@ router.get("/all-invoices", (req, res)=>{
         .then((invoices)=>{
             res.json(invoices)
         })
+});
+
+router.get("/oneInvoice/:id", (req, res)=>{
+    db.Invoice.findOne({
+        where : {id : req.params.id},
+        include : [
+            db.Business, 
+            {model : db.Order,
+            include : [db.Product]}
+        ]
+    })
+        .then((invoice)=>{
+            res.json(invoice)
+        })
 })
 
 // router.get("/count-and-sum-orders", (req, res)=>{

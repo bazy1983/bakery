@@ -8,13 +8,9 @@ import Products from "./components/products/Products";
 import Business from "./components/business/Business";
 import Invoice from "./components/invoice/Invoice";
 import AllInvoices from "./components/all-invoices/AllInvoices"
+import Report from "./components/report/Report";
 
 class App extends Component {
-  state = {
-    showProducts: false,
-    showBusiness: false,
-    showInvoice: true
-  }
 
   showComponentToggler = (compName) => {
     this.setState({ [compName]: !this.state[compName] });
@@ -31,7 +27,7 @@ class App extends Component {
               <Route exact path="/products" component={Products} />
               <Route exact path="/business" component={Business} />
               <Route exact path="/all-invoices" component={AllInvoices}/>
-              <Route path="/report"/>
+              <Route path="/report" component={Report}/>
             </Switch>
           </div>
         </div>

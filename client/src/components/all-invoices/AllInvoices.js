@@ -85,7 +85,7 @@ class AllInvoices extends Component {
                                         <span style={{ width: "35%" }}>Customer: {invoice.Business.name} </span>
                                         <span style={{ width: "15%" }}>records: {invoice.Orders.length} </span>
                                         <span style={{ width: "20%" }}>Amount: ${total} </span>
-                                        <span className="print" style={{ width: "5%" }}><a href={`/report/${invoice.id}`} target="_blank" rel="noopener noreferrer"><MdPrint /></a> </span>
+                                        <span className="print" style={{ width: "5%" }}><a href={`/report#${invoice.id}`} target="_blank" rel="noopener noreferrer"><MdPrint /></a> </span>
                                     </div>
                                     <div className="collapsible-body">
                                         <table>

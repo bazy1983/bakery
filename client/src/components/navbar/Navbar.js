@@ -7,8 +7,9 @@ import { MdExpandMore } from "react-icons/md";
 
 
 const Navbar = (props) => {
+  let path = window.location.pathname;
   return (
-    <div>
+    <div className={path==="/report"? "hidden": null}>
       <ul id="dropdown1" className="dropdown-content">
         <li><Link to="/">New</Link></li>
         <li><a href="/all-invoices">All</a></li>

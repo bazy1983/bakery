@@ -29,7 +29,7 @@ const AddBusiness = (props) => {
                 <label htmlFor="state">State</label>
             </div> */}
             <div className="input-field col s4">
-                <select value="0" id="state" onChange={props.changeHandler} value={props.state}>
+                <select id="state" onChange={props.changeHandler} value={props.state}>
                     <option value="0" disabled>State</option>
                     {
                         states.map((state) => {

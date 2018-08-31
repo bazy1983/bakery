@@ -49,6 +49,9 @@ const API = {
                 query : query
             }
         })
+    },
+    invoiceToPrint: (id)=>{
+        return axios.get("/api/oneInvoice/"+id)
     }
 
 }
