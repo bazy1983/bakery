@@ -16,13 +16,14 @@ const Navbar = (props) => {
         <li className="divider"></li>
         <li><a href="#!">three</a></li>
       </ul>
-      <nav>
-        <div className="nav-wrapper green darken-4">
+      <nav >
+        <div className="nav-wrapper green darken-4" style={{padding:"0px 10px"}}>
           <h5 className="left">Wayne's Bakery</h5>
           <ul id="nav-mobile" className="right">
             <li><NavLink to="/products">Products</NavLink></li>
             <li><a href="/business">Customers</a></li>
             <li><a className="dropdown-trigger" data-target="dropdown1">Invoice<MdExpandMore/></a></li>
+            <li><Link to="/product-chart">Stats</Link></li>
           </ul>
         </div>
       </nav>

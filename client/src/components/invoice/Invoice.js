@@ -89,7 +89,7 @@ class Invoice extends Component {
                 InvoiceId: invoiceId,
                 ProductId: productId
             }
-            API.invoiceRecord(record)
+            API.invoiceRecord(record) //post record
                 .then(() => {
                     this.getInvoiceRecords()
                 })
@@ -99,6 +99,7 @@ class Invoice extends Component {
                 productId: null,
                 quantity: 0
             })
+            this.refs.productSelect.value = "";
         } else {
             console.log("can not submit")
         }
@@ -121,6 +122,7 @@ class Invoice extends Component {
             invoiceId : null,
             businessID : null
         })
+        this.refs.businessSelect.value = "";
     }
 
 
@@ -134,7 +136,7 @@ class Invoice extends Component {
                     Customer :
                         <div className="input-field inline" style={{ width: "65%" }}>
                             {/* dropdown of all businesses */}
-                        <select className="browser-default" defaultValue="" onChange={this.onBusinessSelect}>
+                        <select className="browser-default" defaultValue="" onChange={this.onBusinessSelect} ref="businessSelect">
                             <option value="" disabled>Choose your option</option>
                             {this.state.businesses ?
                                 this.state.businesses
@@ -185,7 +187,8 @@ class Invoice extends Component {
                         <tr>{/* start new record fields */}
                             <td>{counter++}</td>
                             <td>
-                                <select className="browser-default" defaultValue="" onChange={this.onProductSelect}>
+                                {/* Product Dropdown */}
+                                <select className="browser-default" defaultValue="" onChange={this.onProductSelect} ref="productSelect">
                                     <option value="" disabled>Choose Product</option>
                                     {
                                         this.state.productsList ?

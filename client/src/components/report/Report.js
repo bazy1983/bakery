@@ -7,11 +7,13 @@ class Report extends React.Component {
         number: null,
         business: null,
         order: [],
-        grand : null
+        grand : null,
+        date : null
     }
 
     componentDidMount() {
         let id = window.location.hash.substr(1);
+        let today = new Date()
         API.invoiceToPrint(id)
             .then((invoice) => {
                 let grand =0;
@@ -23,9 +25,10 @@ class Report extends React.Component {
                     number: invoice.data.number,
                     business: invoice.data.Business.name,
                     order : invoice.data.Orders,
-                    grand : Math.round(grand*100)/100
-                    
+                    grand : Math.round(grand*100)/100,
+                    date : `${today.getMonth()+1}/${today.getDate()}/${today.getFullYear()}`
                 })
+                console.log(this.state)
             })
     }
 
@@ -47,7 +50,7 @@ class Report extends React.Component {
                         </div>
                     </div>
                     <div className="print-col3">
-                        <p>Date: 08/20/2018</p>
+                        <p>Date: {this.state.date}</p>
                         <p>Invoice: {this.state.number}</p>
                     </div>
                 </div>

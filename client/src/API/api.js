@@ -52,6 +52,14 @@ const API = {
     },
     invoiceToPrint: (id)=>{
         return axios.get("/api/oneInvoice/"+id)
+    },
+    sales : (period, type)=>{
+        return axios.get("/api/sales",{
+            params : {
+                period : period,
+                type : type
+            }
+        })
     }
 
 }

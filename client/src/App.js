@@ -9,6 +9,8 @@ import Business from "./components/business/Business";
 import Invoice from "./components/invoice/Invoice";
 import AllInvoices from "./components/all-invoices/AllInvoices"
 import Report from "./components/report/Report";
+import ProductChart from "./components/chart-product/ProdChart";
+import SalesChart from "./components/chart-sales/SalesChart";
 
 class App extends Component {
 
@@ -28,6 +30,7 @@ class App extends Component {
               <Route exact path="/business" component={Business} />
               <Route exact path="/all-invoices" component={AllInvoices}/>
               <Route path="/report" component={Report}/>
+              <Route exact path="/product-chart" component={SalesChart}/>
             </Switch>
           </div>
         </div>

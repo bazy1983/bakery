@@ -3,7 +3,7 @@ const router = express.Router();
 const db = require("../models");
 
 function firstOfCurrentMonth() {
-    return new Date(new Date().getFullYear(),new Date().getMonth() , 1)
+    return new Date(new Date().getFullYear(), new Date().getMonth(), 1)
 }
 
 router.post("/new-product", (req, res) => {
@@ -88,7 +88,7 @@ router.post("/invoice-record", (req, res) => {
         .then(() => {
             res.status(200).end();
         })
-        .catch((err)=>{
+        .catch((err) => {
             console.error(err)
         })
 })
@@ -99,45 +99,45 @@ router.get("/records/:invoiceId", (req, res) => {
         where: {
             invoiceId: req.params.invoiceId
         },
-        include : [
-            {model : db.Business},
-            {model : db.Product}
+        include: [
+            { model: db.Business },
+            { model: db.Product }
         ]
     })
-        .then((records)=>{
+        .then((records) => {
             res.json(records)
         })
 })
 
 // counts all invoices in BD and generate a count as new invoice number
-router.get("/generate-invoice-number",(req, res)=>{
+router.get("/generate-invoice-number", (req, res) => {
     db.Invoice.findAndCountAll()
-        .then((data)=>{
-            res.json({count:data.count})
+        .then((data) => {
+            res.json({ count: data.count })
         })
 })
 
-router.post("/open-invoice", (req, res)=>{
+router.post("/open-invoice", (req, res) => {
     console.log(req.body)
     db.Invoice.findOrCreate({
-        where: {number : req.body.number},
-        defaults: {BusinessId : req.body.businessId}
+        where: { number: req.body.number },
+        defaults: { BusinessId: req.body.businessId }
     })
-    .spread((invoice, created) => {
-        if(!created){ // if record exists
-            db.Invoice.update(
-                {BusinessId : req.body.businessId},
-                {where : {number : req.body.number}}
-            )
-                .then((invoice)=>{
-                    return
-                })
-        }
-        res.json(invoice);
-    })
+        .spread((invoice, created) => {
+            if (!created) { // if record exists
+                db.Invoice.update(
+                    { BusinessId: req.body.businessId },
+                    { where: { number: req.body.number } }
+                )
+                    .then((invoice) => {
+                        return
+                    })
+            }
+            res.json(invoice);
+        })
 })
 
-router.get("/all-invoices", (req, res)=>{
+router.get("/all-invoices", (req, res) => {
     db.Invoice.findAll({
         where: {
             number: {
@@ -145,31 +145,52 @@ router.get("/all-invoices", (req, res)=>{
             }
         },
         include: [
-            db.Business, 
+            db.Business,
             {
-                model : db.Order, 
+                model: db.Order,
                 include: [{
-                    model : db.Product,
+                    model: db.Product,
                 }]
             }],
-        order : [["id", req.query.sort]]
+        order: [["id", req.query.sort]]
     })
-        .then((invoices)=>{
+        .then((invoices) => {
             res.json(invoices)
         })
 });
 
-router.get("/oneInvoice/:id", (req, res)=>{
+router.get("/oneInvoice/:id", (req, res) => {
     db.Invoice.findOne({
-        where : {id : req.params.id},
-        include : [
-            db.Business, 
-            {model : db.Order,
-            include : [db.Product]}
+        where: { id: req.params.id },
+        include: [
+            db.Business,
+            {
+                model: db.Order,
+                include: [db.Product]
+            }
         ]
     })
-        .then((invoice)=>{
+        .then((invoice) => {
             res.json(invoice)
+        })
+})
+
+//get all sales for the year
+router.get("/sales", (req, res) => {
+    let Op = db.sequelize.Op;
+    let currentYear = typeof req.query.period === "string" ? req.query.period : req.query.period.toString();
+    let nextYear = parseInt(currentYear)+1
+    nextYear = nextYear.toString();
+    db.Order.findAll({
+        where : {
+            createdAt : {
+                [Op.between]: [new Date(currentYear), new Date(nextYear)]
+            }
+        }
+    })
+        .then((invoices) => {
+            res.json(invoices)
+            // console.log(invoices)
         })
 })
 
