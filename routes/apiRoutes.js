@@ -175,7 +175,7 @@ router.get("/oneInvoice/:id", (req, res) => {
         })
 })
 
-//get all sales for the year
+//get all sales for the year grouped by months
 router.get("/sales", (req, res) => {
     let Op = db.sequelize.Op;
     let currentYear = typeof req.query.period === "string" ? req.query.period : req.query.period.toString();
@@ -186,11 +186,19 @@ router.get("/sales", (req, res) => {
             createdAt : {
                 [Op.between]: [new Date(currentYear), new Date(nextYear)]
             }
-        }
+        },
+        attributes : [
+            "id",
+            "total",
+            "createdAt",
+            [db.sequelize.fn("MONTH", db.sequelize.col("createdAt")), "month"],
+            [db.sequelize.fn("SUM", db.sequelize.col("total")), "grandTotal"]
+        ],
+        group : "month"
+    
     })
         .then((invoices) => {
             res.json(invoices)
-            // console.log(invoices)
         })
 })
 
