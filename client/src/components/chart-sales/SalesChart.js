@@ -23,7 +23,7 @@ class SalesChart extends Component {
                 // console.log(sales.data)
                 let monthNames = [], monthlySale =[];
                 let dataset = sales.data.forEach((monthSale) => {
-                        monthNames.push(months[monthSale.month + 1].short);  //name of the month
+                        monthNames.push(months[monthSale.month -1].short);  //name of the month
                         monthlySale.push(Math.round(monthSale.grandTotal * 100) / 100);
                 })
                 this.setState({

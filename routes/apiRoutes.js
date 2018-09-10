@@ -93,6 +93,15 @@ router.post("/invoice-record", (req, res) => {
         })
 })
 
+router.delete("/record-by-id/:id", (req, res)=>{
+    db.Order.destroy({
+        where : req.params
+    })
+        .then(()=>{
+            res.status(200).end();
+        })
+})
+
 router.get("/records/:invoiceId", (req, res) => {
     // console.log(req.params)
     db.Order.findAll({

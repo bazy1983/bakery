@@ -14,9 +14,6 @@ import SalesChart from "./components/chart-sales/SalesChart";
 
 class App extends Component {
 
-  showComponentToggler = (compName) => {
-    this.setState({ [compName]: !this.state[compName] });
-  }
 
   render() {
     return (

@@ -30,6 +30,10 @@ const API = {
     invoiceRecord: (record) => {//creates records
         return axios.post("/api/invoice-record", record)
     },
+    removeRecord: (recordId) => {
+        console.log(recordId)
+        return axios.delete("/api/record-by-id/" + recordId)
+    },
     recordsforInvoice: (invoiceId) => {//get all records for invoiceId
         return axios.get("/api/records/" + invoiceId)
     },
