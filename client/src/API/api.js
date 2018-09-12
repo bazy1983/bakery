@@ -64,6 +64,9 @@ const API = {
                 type : type
             }
         })
+    },
+    productSale: ()=>{
+        return axios.get("/api/product-sale")
     }
 
 }

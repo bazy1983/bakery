@@ -16,6 +16,10 @@ const Navbar = (props) => {
         <li className="divider"></li>
         <li><a href="#!">three</a></li>
       </ul>
+      <ul id="dropdown2" className="dropdown-content">
+        <li><Link to="/sales-chart">Sales</Link></li>
+        <li><a href="/product-chart">Product</a></li>
+      </ul>
       <nav >
         <div className="nav-wrapper green darken-4" style={{padding:"0px 10px"}}>
           <h5 className="left">Wayne's Bakery</h5>
@@ -23,7 +27,7 @@ const Navbar = (props) => {
             <li><NavLink to="/products">Products</NavLink></li>
             <li><a href="/business">Customers</a></li>
             <li><a className="dropdown-trigger" data-target="dropdown1">Invoice<MdExpandMore/></a></li>
-            <li><Link to="/product-chart">Stats</Link></li>
+            <li><a className="dropdown-trigger" data-target="dropdown2">Stats<MdExpandMore/></a></li>
           </ul>
         </div>
       </nav>

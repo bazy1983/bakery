@@ -2,6 +2,8 @@ const express = require("express");
 const router = express.Router();
 const db = require("../models");
 
+let Op = db.sequelize.Op;
+
 function firstOfCurrentMonth() {
     return new Date(new Date().getFullYear(), new Date().getMonth(), 1)
 }
@@ -186,7 +188,7 @@ router.get("/oneInvoice/:id", (req, res) => {
 
 //get all sales for the year grouped by months
 router.get("/sales", (req, res) => {
-    let Op = db.sequelize.Op;
+    
     let currentYear = typeof req.query.period === "string" ? req.query.period : req.query.period.toString();
     let nextYear = parseInt(currentYear)+1
     nextYear = nextYear.toString();
@@ -211,6 +213,29 @@ router.get("/sales", (req, res) => {
         })
 })
 
+router.get("/product-sale", (req, res)=>{
+    let currentYear = (new Date().getFullYear()).toString(); 
+    let nextYear = (parseInt(currentYear) + 1).toString();
+
+
+    db.Order.findAll({
+        where : {
+            createdAt : {
+                [Op.between]: [new Date(currentYear), new Date(nextYear)]
+            }
+        },
+        attributes : [
+            "id" , "total", "productId",
+            [db.sequelize.fn("SUM", db.sequelize.col("total")), "productTotal"]
+        ],
+        include : [db.Product],
+        group : "productId"
+    })
+        .then((productSale)=>{
+            console.log(productSale)
+            res.json(productSale)
+        })
+})
 // router.get("/count-and-sum-orders", (req, res)=>{
 //     db.Order.findAll({
 //         attributes : {include : [

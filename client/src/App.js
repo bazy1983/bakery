@@ -27,7 +27,8 @@ class App extends Component {
               <Route exact path="/business" component={Business} />
               <Route exact path="/all-invoices" component={AllInvoices}/>
               <Route path="/report" component={Report}/>
-              <Route exact path="/product-chart" component={SalesChart}/>
+              <Route exact path="/sales-chart" component={SalesChart}/>
+              <Route exact path="/product-chart" component={ProductChart}/>
             </Switch>
           </div>
         </div>
